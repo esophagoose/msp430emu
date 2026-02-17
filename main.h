@@ -29,7 +29,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <pthread.h>
-#include <libwebsockets.h>
+#include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -43,8 +43,18 @@ typedef struct Timer_a Timer_a;
 typedef struct Status_reg Status_reg;
 
 typedef struct Debugger Debugger;
-typedef struct Server Server;
-typedef struct Packet Packet;
+
+void print_console(Emulator *emu, const char *buf);
+void print_serial(Emulator *emu, char *buf);
+void send_control(Emulator *emu, uint8_t opcode, void *data, size_t size);
+bool ipc_configure(const char *spec, char *err, size_t err_len);
+void ipc_close(void);
+void ipc_emit_gpio(Emulator *emu, uint8_t port, uint8_t pin, uint8_t dir, uint8_t value);
+void ipc_emit_uart_tx(Emulator *emu, uint8_t value);
+
+enum {
+    SERVO_MOTOR = 0x21,
+};
 
 #include "devices/peripherals/bcm.h"
 #include "devices/peripherals/timer_a.h"
@@ -53,7 +63,6 @@ typedef struct Packet Packet;
 #include "devices/cpu/registers.h"
 #include "devices/utilities.h"
 #include "devices/memory/memspace.h"
-#include "debugger/websockets/emu_server.h"
 #include "devices/cpu/decoder.h"
 #include "debugger/debugger.h"
 #include "debugger/register_display.h"

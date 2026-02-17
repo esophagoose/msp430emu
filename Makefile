@@ -1,11 +1,11 @@
-all: MSP430 SERVER
+all: MSP430
 
-MSP430 : main.o utilities.o emu_server.o registers.o memspace.o debugger.o disassembler.o \
+MSP430 : main.o utilities.o io.o registers.o memspace.o debugger.o disassembler.o \
 	register_display.o decoder.o flag_handler.o formatI.o formatII.o formatIII.o \
-	usci.o port1.o packet_queue.o bcm.o timer_a.o
+	usci.o port1.o bcm.o timer_a.o
 
-	g++ -o MSP430 main.o emu_server.o utilities.o registers.o memspace.o debugger.o disassembler.o \
-	register_display.o decoder.o flag_handler.o formatI.o formatII.o formatIII.o usci.o port1.o bcm.o timer_a.o packet_queue.o -lreadline -lwebsockets -lpthread -lrt -lssl -lcrypto;
+	g++ -o MSP430 main.o utilities.o io.o registers.o memspace.o debugger.o disassembler.o \
+	register_display.o decoder.o flag_handler.o formatI.o formatII.o formatIII.o usci.o port1.o bcm.o timer_a.o -lreadline -lpthread
 
 main.o : main.cpp
 	g++ -c main.cpp
@@ -21,6 +21,9 @@ memspace.o : devices/memory/memspace.c
 
 debugger.o : debugger/debugger.c
 	g++ -c debugger/debugger.c
+
+io.o : debugger/io.c
+	g++ -c debugger/io.c
 
 disassembler.o : debugger/disassembler.c
 	g++ -c debugger/disassembler.c
@@ -55,26 +58,11 @@ usci.o : devices/peripherals/usci.c
 port1.o : devices/peripherals/port1.c
 	g++ -c devices/peripherals/port1.c
 
-emu_server.o : debugger/websockets/emu_server.cpp
-	g++ -c debugger/websockets/emu_server.cpp
-
-packet_queue.o : debugger/websockets/packet_queue.c
-	g++ -c debugger/websockets/packet_queue.c
-
-# Server Program
-
-SERVER : server.o
-	cc -o server server.o -lrt -lpthread -lwebsockets -lssl -lcrypto;
-
-server.o : debugger/server/server.c
-	cc -c debugger/server/server.c
-
-
 clean :
-	rm server.o main.o utilities.o emu_server.o registers.o \
+	rm -f main.o utilities.o io.o registers.o \
 	memspace.o debugger.o disassembler.o \
 	register_display.o decoder.o flag_handler.o formatI.o \
 	formatII.o formatIII.o \
-	usci.o port1.o packet_queue.o bcm.o timer_a.o \
+	usci.o port1.o bcm.o timer_a.o \
 	*.bin *.tmp *.elf \
-	MSP430 server;
+	MSP430;

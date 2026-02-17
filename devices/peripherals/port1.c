@@ -40,6 +40,13 @@ void handle_port_1 (Emulator *emu)
 {
     Cpu *cpu = emu->cpu;
     Port_1 *p = cpu->p1;
+    static bool state_initialized = false;
+    static uint8_t prev_out = 0;
+    static uint8_t prev_dir = 0;
+    uint8_t out_now = *p->OUT;
+    uint8_t dir_now = *p->DIR;
+    uint8_t changed_mask;
+    uint8_t bit;
 
     //////////////////// P1.0 ////////////////////////
 
@@ -405,6 +412,26 @@ void handle_port_1 (Emulator *emu)
     else {
         p->IE_7 = false;
     }
+
+    changed_mask = (uint8_t)((prev_out ^ out_now) | (prev_dir ^ dir_now));
+    if (state_initialized && changed_mask != 0)
+    {
+        for (bit = 0; bit < 8; bit++)
+        {
+            uint8_t mask = (uint8_t)(1u << bit);
+
+            if ((changed_mask & mask) != 0)
+            {
+                uint8_t dir = ((dir_now & mask) != 0) ? 1 : 0;
+                uint8_t value = ((out_now & mask) != 0) ? 1 : 0;
+                ipc_emit_gpio(emu, 1, bit, dir, value);
+            }
+        }
+    }
+
+    prev_out = out_now;
+    prev_dir = dir_now;
+    state_initialized = true;
 }
 
 void setup_port_1 (Emulator *emu)

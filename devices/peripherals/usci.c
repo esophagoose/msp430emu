@@ -132,7 +132,7 @@ void handle_usci (Emulator *emu)
 	  //write(sp, usci->UCA0TXBUF, 1);
 	}
 	else if (deb->console_interface) {
-	  //write(sp, usci->UCA0TXBUF, 1);
+	  print_serial(emu, (char*)&str[0]);
 	}
 
 	*usci->UCA0TXBUF = 0;

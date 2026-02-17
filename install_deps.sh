@@ -5,6 +5,6 @@ echo "$(whoami)"
 
 apt update;
 apt install -y gcc-msp430 msp430mcu msp430-libc;
-apt install -y libreadline-dev libssl-dev libwebsockets-dev;
+apt install -y libreadline-dev binutils;
 
 echo "Done Installing Deps"

@@ -1,8 +1,6 @@
 MSP430 Emulator
 ===============
 
-You can use this emulator online now at: https://msp430.online
-
 - Providing a complete software model of the MSP430 16-bit instruction set
 - An interactive debugger for advanced development and in depth firmware/hardware analysis
 - Peripherals include:
@@ -18,21 +16,24 @@ You can use this emulator online now at: https://msp430.online
   Please contact rgeosits@live.esu.edu if you are interested in using this tool for educational or industrial purposes.
   Thank you!
   
-![Interface.PNG](https://msp430.online/images/Interface.PNG)
-  
 --------------------------------------------------------------------------------------------------------------------------
 
-- Build Instructions for API
-  - Install dependencies via ./install_deps.sh
-  - navigate to the root of the source tree
-  - type 'make'
+- Build Instructions (CLI)
+  - Install dependencies:
+    - macOS (Homebrew): `brew install readline llvm`
+    - Linux (Debian/Ubuntu): `./install_deps.sh`
+  - Navigate to the root of the source tree
+  - Run `make`
 
-- User Instructions for online interface
-  - Log onto https://msp430.online to use the online simulator!
+- User Instructions (CLI)
+  - Run `./MSP430 path/to/firmware.elf`
+  - `.bin` inputs are also supported: `./MSP430 path/to/firmware.bin`
+  - Optional IPC stream (UNIX socket): `./MSP430 path/to/firmware.elf --ipc unix:/tmp/msp430.sock`
+  - At the debugger prompt use `h` for commands, then `run`, `step`, `break`, etc.
+  - Listen from Python: `python3 tools/gpio_listener.py --socket /tmp/msp430.sock`
 
 - Documentation & Sample Programs:
-  - Sample Programs: https://msp430.online/examples.html
-  - User Guide: http://msp430.online/help.html
+  - Firmware samples: `430x2_firm/`
 
 - TODO
   - Basic Clock Module / Timer  

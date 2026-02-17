@@ -184,8 +184,7 @@ bool exec_cmd (Emulator *emu, char *line, int len)
   else if ( !strncasecmp("break", cmd, sizeof "break") ) 
     {
       if (deb->num_bps >= MAX_BREAKPOINTS) {
-	//printf("Breakpoints are full.\n");
-	print_console(emu, "Breakpoints are full.\n");
+	printf("Breakpoints are full.\n");
 
 	return true;
       }
@@ -198,14 +197,12 @@ bool exec_cmd (Emulator *emu, char *line, int len)
 	       &deb->bp_addresses[deb->num_bps]);
       
 	sprintf(entry, "\n\t[Breakpoint [%d] Set]\n", deb->num_bps + 1);
-	//printf("%s", entry);
-	print_console(emu, entry);
+	printf("%s", entry);
 
 	++deb->num_bps;
       }
       else {
-	//printf("error\n");
-	print_console(emu, "error\n");
+	printf("error\n");
       }
     }
 
@@ -221,15 +218,13 @@ bool exec_cmd (Emulator *emu, char *line, int len)
 	  sprintf(entry, "\t[%d] 0x%04X\n", 
 		  deb->current_bp+1, deb->bp_addresses[deb->current_bp]);
 
-	  //printf("%s", entry);
-	  print_console(emu, entry);
+	  printf("%s", entry);
 
 	  ++deb->current_bp;
 	}
       }
       else {
-	//printf("You have not set any breakpoints!\n");
-	print_console(emu, "You have not set any breakpoints!\n");
+	printf("You have not set any breakpoints!\n");
       }
     }
 
@@ -250,7 +245,7 @@ bool exec_cmd (Emulator *emu, char *line, int len)
   // End the line loop, next instruction
   else 
     {
-      print_console(emu, "\t[Invalid command, type \"help\".]\n");
+      printf("\t[Invalid command, type \"help\".]\n");
     }
 
   return true;
@@ -463,13 +458,13 @@ void dump_memory ( Emulator *emu, uint8_t *MEM, uint32_t size, uint32_t start_ad
   char str[100] = {0};
 
   puts("");
-  print_console(emu, "\n");
+  printf("\n");
 
   for (i = 0; i < 32; i += 8) {
     sprintf(str, "0x%04X:\t", msp_addr);
 
     printf("%s", str);
-    print_console(emu, str);
+    printf("%s", str);
 
     if ( stride == BYTE_STRIDE ) {
       sprintf(str, "0x%02X  0x%02X  0x%02X  0x%02X  "\
@@ -478,7 +473,7 @@ void dump_memory ( Emulator *emu, uint8_t *MEM, uint32_t size, uint32_t start_ad
 	      *(MEM+4),*(MEM+5),*(MEM+6),*(MEM+7));
 
       printf("%s", str);
-      print_console(emu, str);
+      printf("%s", str);
     }
     else if ( stride == WORD_STRIDE ) {
       printf("0x%02X%02X  0x%02X%02X  0x%02X%02X  0x%02X%02X\n",
@@ -507,11 +502,8 @@ void setup_debugger(Emulator *emu)
   deb->disassemble_mode = false;
   deb->quit = false;
 
-  deb->web_interface = true;
-  deb->web_server_ready = false;
-  deb->web_firmware_uploaded = false;
-
-  deb->console_interface = false;
+  deb->web_interface = false;
+  deb->console_interface = true;
 
   memset(deb->bp_addresses, 0, sizeof(deb->bp_addresses));
   deb->num_bps = 0;
@@ -546,7 +538,6 @@ void handle_breakpoints (Emulator *emu)
       
       sprintf(str, "\n\t[Breakpoint %d hit]\n\n", i + 1);
       printf("%s", str);
-      print_console(emu, str);
       
       display_registers(emu);
       disassemble(emu, cpu->pc, 1);

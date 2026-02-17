@@ -65,7 +65,7 @@ void load_firmware(Emulator *emu, char *file_name, uint16_t virt_addr)
     if (size > (0x10000 - 0x0C000))
     {
         printf("SizeTooBig\n");
-        print_console(emu, "Flash Size too small to fit your binary. Quitting, please refresh to try again. Ensure you are compiling for the right MSP version.\n");
+        print_console(emu, "Flash size too small to fit your binary. Ensure you are compiling for the right MSP version.\n");
         usleep(20000);
         exit(1);
     }
@@ -350,7 +350,7 @@ void reg_num_to_name(uint8_t number, char *name)
  */
 const char* LocalHelpStr =
 "**************************************************\n"\
-"*\t\tMSP430-Emulator\n*\n*\tUsage: ./msp430 BINARY_FIRMWARE\n*\n"\
+"*\t\tMSP430-Emulator\n*\n*\tUsage: ./MSP430 <firmware.elf|firmware.bin> [--ipc unix:/tmp/msp430.sock]\n*\n"\
 "* run\t\t\t[Run Program Until Breakpoint is Hit]\n"\
 "* step [N]\t\t[Step Into Instruction]\n"\
 "* dump [HEX_ADDR|Rn]\t[Dump Memory direct or at register value]\n"\

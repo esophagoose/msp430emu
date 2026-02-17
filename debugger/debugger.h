@@ -34,22 +34,11 @@ typedef struct Debugger
   bool console_interface;
   bool quit;
 
-  unsigned int ws_port;
-
-  pthread_t web_server_thread;
-  bool web_server_ready;
-  bool web_firmware_uploaded;
-
-  pthread_t gui_thread;
-
   char mnemonic[50];
 
   uint16_t bp_addresses[MAX_BREAKPOINTS];
   uint16_t current_bp;
   uint32_t num_bps;
-
-  // debug server for web interface
-  Server *server;
 } Debugger;
 
 void setup_debugger(Emulator *emu);
@@ -58,6 +47,7 @@ void dump_memory(Emulator *emu, uint8_t *MEM, uint32_t size,
 		 uint32_t start_addr, uint8_t stride);
 
 void handle_sigint(int signal);
+void register_signal(int sig);
 
 bool command_loop(Emulator *emu, char *buf, int len);
 bool exec_cmd (Emulator *emu, char *buf, int len);
